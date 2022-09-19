@@ -39,7 +39,6 @@ def create_min_heap(h: np.ndarray):
     k = 0
     j = (len(h)-1) // 2
     for i in range(0,j+1):
-        print("i:", i)
         for k in range(0,i+1):
             min_heapify(h,k)
             print(k)
