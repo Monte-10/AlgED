@@ -2,19 +2,24 @@ import numpy as np
 
 
 def min_heapify(h: np.ndarray, i: int):
+
     #Mientras no estes en el nodo hoja
     while 2*i+1 < len(h):
         n_i = i
+
         #Si nodo enviado > que hijo izquierdo entonces guardas posicion hijo
         if h[i] > h[2*i+1]:
             n_i = 2*i+1
+
         #Comprueba si hay hijo derecho y si lo hay comprueba nodo estamos > derecho y si posicion guardada es > hijo derecho, si ambos son mayores se actualiza posicion
         if 2*i+2 < len(h) and h[i] > h[2*i+2] and h[2*i+2] < h[n_i]:
             n_i = 2*i+2
+
         #Si no hijo izq y drc es menor, y nodo que hemos guardado tiene valor menor o posicion baja, intercambia valores de i y n_i
         if n_i > i:
             h[i], h[n_i] = h[n_i], h[i]
             i = n_i
+            
         #Si no hace nada, devuelve
         else:
             return
