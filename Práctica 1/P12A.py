@@ -25,7 +25,7 @@ def min_heapify(h: np.ndarray, i: int):
             return
 
 def insert_min_heap(h: np.ndarray, k: int) -> np.ndarray:
-    h += [k]
+    h = np.append(h,k)
     j = len(h) - 1
 
     while j >= 1 and h[(j-1) // 2] > h[j]:
@@ -41,7 +41,7 @@ def create_min_heap(h: np.ndarray):
     for i in range(0,j+1):
         for k in range(0,i+1):
             min_heapify(h,k)
-            print(k)
+            
     
     return h
 
