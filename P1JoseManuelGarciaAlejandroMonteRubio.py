@@ -130,19 +130,23 @@ import numpy as np
 # ejemplo: array = [1,2,3,4,5] K = 2 entonces numero = 3
 # bastaria con obtener la raiz del heap y realizar heapify, se realizará K veces.
 def select_min_heap(h: np.ndarray, k: int)-> int:
-    aux = np.array(h, copy=True)
+    
+    aux = h.copy()
+    print(aux)
     # invierte el array 
-    for i in range(0, len(aux)):
+    for i in range(0,len(aux)):
         aux[i] = aux[i]*-1
-
+    # se cogen los k primeros
+    aux_mh = aux[:k]
+    
     # realiza el min_heap sobre el array invertido
-    aux = create_min_heap(aux)
-    for j in range (0, k):
-        # podemos emplear un delete de la libreria np
-        aux = np.delete(aux,0)
-         # realiza el min_heap sobre el array invertido
-        aux = create_min_heap(aux)
+    aux_mh = create_min_heap(aux_mh)
+    
+    for i in range (k, len(h)):
+        if aux[i] > aux_mh[0]:
+            aux_mh[0] = aux[i]
+            min_heapify(aux_mh, 0)
 
-    return aux[0]*-1
+    return aux_mh[0]*-1
 
 
