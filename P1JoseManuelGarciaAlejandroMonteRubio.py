@@ -132,21 +132,29 @@ import numpy as np
 def select_min_heap(h: np.ndarray, k: int)-> int:
     
     aux = h.copy()
-    print(aux)
     # invierte el array 
-    for i in range(0,len(aux)):
-        aux[i] = aux[i]*-1
+    aux = np.multiply(aux, -1)
     # se cogen los k primeros
     aux_mh = aux[:k]
     
     # realiza el min_heap sobre el array invertido
     aux_mh = create_min_heap(aux_mh)
-    
     for i in range (k, len(h)):
         if aux[i] > aux_mh[0]:
             aux_mh[0] = aux[i]
             min_heapify(aux_mh, 0)
+    
+    return np.multiply(aux_mh, -1)
 
-    return aux_mh[0]*-1
+"""def obtiene_menores(h: np.ndarray)-> np.ndarray:
+    m1 = h[0]
+    m2 = h[1]
+    for i in range(2, len(h)):
+        if m1 > h[i] or m2 > h[i]:
+            if m1 > m2:
+                m1 = h[i]
+            else:
+                m2 = h[i]
 
+    return [m1,m2]"""
 
