@@ -1,11 +1,11 @@
 %matplotlib inline
-from p105 import *
+from p115 import *
 from sklearn.linear_model import LinearRegression
 from matplotlib import pyplot as plt
 from sklearn.linear_model import LinearRegression
 from sklearn.preprocessing import normalize
 import numpy as np
-from from typing import List, Callable
+from typing import List, Callable
 
 l_timings = []
 l_timings2 = []
