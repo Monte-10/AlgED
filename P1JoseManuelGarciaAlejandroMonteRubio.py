@@ -1,4 +1,5 @@
 import numpy as np
+from typing import List, Callable
 
 def matrix_multiplication(m_1: np.ndarray, m_2: np.ndarray) -> np.ndarray :
 
@@ -144,7 +145,7 @@ def select_min_heap(h: np.ndarray, k: int)-> int:
             aux_mh[0] = aux[i]
             min_heapify(aux_mh, 0)
     
-    return np.multiply(aux_mh, -1)
+    return aux_mh[0]*-1
 
 """def obtiene_menores(h: np.ndarray)-> np.ndarray:
     m1 = h[0]
