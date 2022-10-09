@@ -1,6 +1,7 @@
 import numpy as np
 from typing import List, Callable
-
+# José Manuel García Girádez
+# Alejandro Monterubio Navarro
 
 
 def matrix_multiplication(m_1: np.ndarray, m_2: np.ndarray) -> np.ndarray :
