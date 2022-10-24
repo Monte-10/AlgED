@@ -31,5 +31,33 @@ def find(ind: int, p_cd: np.ndarray) -> int:
     
     return aux
 
-def cd_2_dict(p_cd: np. ndarray) -> Dict:
+def cd_2_dict(p_cd: np.ndarray) -> dict:
+    dict = {}
+    for i in range(len(p_cd)):
+        if p_cd[i] < 0:
+            dict[i] = [i]
+
+    for i in range(len(p_cd)):
+        if p_cd[i] >= 0:
+            dict[find(i, p_cd)].append(i)
+
+                
+    return dict
+    
+def ccs(n: int, l: List)-> dict:
+    table = init_cd(n)
+    for u,v in l:
+        rep_u = find(u,table)
+        rep_v = find(v,table)
+
+        if rep_u != rep_v:
+            union(rep_u, rep_v, table)
+
+    dict = cd_2_dict(table)
+
+    return dict
+
+n = 7
+l = ((0, 1), (0, 3), (1, 2), (1, 4), (3, 4), (5, 6))
+print(ccs(n,l))
     
