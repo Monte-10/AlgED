@@ -1,5 +1,7 @@
 import numpy as np
-from typing import List, Callable
+import itertools
+
+from typing import List, Dict, Callable, Iterable
 
 def init_cd(n: int) -> np.ndarray:
     array = [-1] * n
