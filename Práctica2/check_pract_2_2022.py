@@ -7,7 +7,7 @@ import textwrap
 
 import numpy as np
 
-import Practica_2 as p2
+import P211 as p2
   
 ####################################### main
 def main():
@@ -31,7 +31,7 @@ def main():
     
     p2.union(p2.find(1, p), p2.find(5, p), p)
     p2.union(p2.find(2, p), p2.find(6, p), p)
-    #p2.union(p2.find(5, p), p2.find(9, p), p)
+    p2.union(p2.find(5, p), p2.find(9, p), p)
     d = p2.cd_2_dict(p)
     print("después\t", d)
     
@@ -69,7 +69,6 @@ def main():
     
     #coger uno
     dist_m = dist_simple
-    dist_m = p2.dist_matrix(4, 10)
     print("graph_matrix\n", dist_m)
     
     circuit = p2.greedy_tsp(dist_m)
@@ -156,12 +155,12 @@ if __name__ == '__main__':
                 str_comm = "mv p2" + args.pareja + ".py  ./pract2.py"
                 print(str_comm)
                 os.system(str_comm)
-                import Practica_2 as p2
+                import pract2 as p2
             else:
                 sys.exit("file {0:s} not found".format(f_path))
         
         else:
-            import Practica_2 as p2
+            import P211 as p2
             
         main()
     
