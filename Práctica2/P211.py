@@ -15,6 +15,7 @@ def init_cd(n: int) -> np.ndarray:
     Return:
         np.ndarray: Array con los valores -1 en las posiciones {0,1,...,n-1}.
     """
+    # Inicializamos el array con -1 con n elementos
     array = [-1] * n
     return array
 
@@ -31,14 +32,15 @@ def union(rep_1: int, rep_2: int, p_cd: np.ndarray) -> int:
     Return:
         int: representante del conjunto unido.
     """
+    # Miramos si el tamaño del primer conjunto es mayor que el del segundo
     if p_cd[rep_2] < p_cd[rep_1]:
         p_cd[rep_1] = rep_2
         return rep_2
-    
+    # Si no, miramos si el tamaño del segundo conjunto es mayor que el del primero
     elif p_cd[rep_2] > p_cd[rep_1]:
         p_cd[rep_2] = rep_1
         return rep_1
-    
+    # Si no, unimos los conjuntos y aumentamos el tamaño del conjunto
     else:
         p_cd[rep_2] = rep_1
         p_cd[rep_1] -= 1
@@ -57,9 +59,10 @@ def find(ind: int, p_cd: np.ndarray) -> int:
         int: representante del conjunto al que pertenece el elemento ind.
     """
     aux = ind
+    # Encontramos el representante del conjunto
     while p_cd[aux] >= 0:
         aux = p_cd[aux]
-        
+    # Comprimimos el camino hasta la raíz
     while p_cd[ind] >= 0:
         aux2 = p_cd[ind]
         p_cd[ind] = aux
@@ -79,15 +82,16 @@ def cd_2_dict(p_cd: np.ndarray) -> dict:
         dict: diccionario con los conjuntos disjuntos.
     """
     dict = {}
-    
+    # Recorremos el array
     for i in range(len(p_cd)):
+        # Si el elemento es un representante, se establece como clave del diccionario
         if p_cd[i] < 0:
             dict[i] = [i]
-
+    # Recorremos el array
     for i in range(len(p_cd)):
+        # Si el elemento no es un representante, se añade a la lista de su representante
         if p_cd[i] >= 0:
             dict[find(i, p_cd)].append(i)
-
                 
     return dict
     
@@ -104,13 +108,18 @@ def ccs(n: int, l: List)-> dict:
         dict: diccionario con las componentes conexas del grafo.
     """
     table = init_cd(n)
+    # Recorremos las ramas del grafo
     for u,v in l:
+        # Hace un find de cada conjunto
         rep_u = find(u,table)
         rep_v = find(v,table)
 
+        # Si los representantes son distintos, hace una unión
         if rep_u != rep_v:
+            # Une los conjuntos
             union(rep_u, rep_v, table)
 
+    # Lo convierte en un diccionario y lo devuelve
     dict = cd_2_dict(table)
 
     return dict
@@ -136,9 +145,13 @@ def dist_matrix(n_nodes: int, w_max=10) -> np.ndarray:
     Return: 
         matriz_symm: Matriz resultante creada.
     """
+    # Generamos una matriz aleatoria con valores aleatorios entre 1 y w_max
     matrix = np.random.randint(1, w_max, size=(n_nodes, n_nodes))
-    # simetrica
+    
+    # Hacemos que la matriz sea simétrica
     matriz_symm = (matrix + matrix.T)//2
+    
+    # Hacemos que la diagonal sea 0
     np.fill_diagonal(matriz_symm, 0)
     return matriz_symm
 
@@ -235,7 +248,7 @@ def repeated_greedy_tsp(dist_m: np.ndarray) -> list:
     
 def exhaustive_tsp(dist_m: np.ndarray) -> list:
     """
-    Función que recibe una matriz de distancias y examina todas las distancias, luego devuelve el circuito con la longitud mínima
+    Función que recibe una matriz de distancias y examina todas los circuitos posibles, luego devuelve el circuito con la longitud mínima
     
     Args:
         dist_m: Matriz de distancias
