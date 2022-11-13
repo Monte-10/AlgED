@@ -165,7 +165,7 @@ def dist_matrix(n_nodes: int, w_max=10) -> np.ndarray:
         matriz_symm: Matriz resultante creada.
     """
     # Generamos una matriz aleatoria con valores aleatorios entre 1 y w_max
-    matrix = np.random.randint(1, w_max, size=(n_nodes, n_nodes))
+    matrix = np.random.randint(0, w_max, size=(n_nodes, n_nodes))
 
     # Hacemos que la matriz sea simétrica
     matriz_symm = (matrix + matrix.T)//2
