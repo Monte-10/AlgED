@@ -80,7 +80,7 @@ def find(ind: int, p_cd: np.ndarray) -> int:
     return aux
 
 
-def cd_2_dict(p_cd: np.ndarray) -> dict:
+def cd_2_dict(p_cd: np.ndarray) -> Dict:
     """
     Función que devuelve un diccionario con los conjuntos disjuntos.
 
@@ -88,7 +88,7 @@ def cd_2_dict(p_cd: np.ndarray) -> dict:
         p_cd: array con los representantes de los conjuntos.
 
     Return:
-        dict: diccionario con los conjuntos disjuntos.
+        Dict: diccionario con los conjuntos disjuntos.
     """
     # si p_cd está vacío devuelve diccionario vacío
     if len(p_cd) <= 0:
@@ -110,7 +110,7 @@ def cd_2_dict(p_cd: np.ndarray) -> dict:
     return dict
 
 
-def ccs(n: int, l: List) -> dict:
+def ccs(n: int, l: List) -> Dict:
     """
     Función que devuelve las componentes conexas de un grafo.
 
@@ -119,7 +119,7 @@ def ccs(n: int, l: List) -> dict:
         l: ramas del grafo.
 
     Return:
-        dict: diccionario con las componentes conexas del grafo.
+        Dict: diccionario con las componentes conexas del grafo.
     """
     # si la lista está vacia devuelve diccionario vacío
     if len(l) <= 0:
@@ -161,8 +161,8 @@ def dist_matrix(n_nodes: int, w_max=10) -> np.ndarray:
         n_nodes: Número de nodos que tendrá la matriz.
         w_max: Valor máximo que puede tener la matriz en una posición.
 
-    Return: 
-        matriz_symm: Matriz resultante creada.
+    Return:
+        np.ndarray: Matriz resultante creada.
     """
     # Generamos una matriz aleatoria con valores aleatorios entre 1 y w_max
     matrix = np.random.randint(0, w_max, size=(n_nodes, n_nodes))
@@ -184,8 +184,8 @@ def greedy_tsp(dist_m: np.ndarray, node_ini=0) -> List:
         dist_m: Matriz de distancias.
         node_ini: Nodo inicial desde el que se creará el circuito.
 
-    Return: 
-        circuito: Lista resultante que corresponde al circuito obtenido.
+    Return:
+        List: Lista resultante que corresponde al circuito obtenido.
     """
     # comprobacion de error
     if len(dist_m) <= 0:
@@ -217,8 +217,8 @@ def len_circuit(circuit: List, dist_m: np.ndarray) -> int:
         circuit: Circuito codicioso.
         dist_m: Matriz de distancias.
 
-    Return: 
-        longitud: Longitud del circuito.
+    Return:
+        int: Longitud del circuito.
     """
     # si el circuito esta vacio devuelve error
     if len(circuit) <= 0:
@@ -236,15 +236,15 @@ def len_circuit(circuit: List, dist_m: np.ndarray) -> int:
     return longitud
 
 
-def repeated_greedy_tsp(dist_m: np.ndarray) -> list:
+def repeated_greedy_tsp(dist_m: np.ndarray) -> List:
     """
     Aplica greedy_tsp con todos los nodos del grafo para devolver el circuito de menor longitud
 
     Args:
         dist_m: Matriz de distancias.
-
-    Return: 
-        circuito_min: Circuito con la menor longitud de todos.
+    
+    Return:
+        List: Circuito con la menor longitud de todos.
     """
     circuitos = {}  # diccionario auxiliar
     ciudades = dist_m.shape[0]  # numero de ciudades
@@ -262,7 +262,7 @@ def repeated_greedy_tsp(dist_m: np.ndarray) -> list:
     return list(circuito_min)
 
 
-def exhaustive_tsp(dist_m: np.ndarray) -> list:
+def exhaustive_tsp(dist_m: np.ndarray) -> List:
     """
     Función que recibe una matriz de distancias y examina todas los circuitos posibles, luego devuelve el circuito con la longitud mínima
 
@@ -270,7 +270,7 @@ def exhaustive_tsp(dist_m: np.ndarray) -> list:
         dist_m: Matriz de distancias
 
     Return:
-        circuito_min: Lista con el circuito con la longitud mínima
+        List: Lista con el circuito con la longitud mínima
     """
     circuitos = {}  # diccionario auxiliar
     ciudades = dist_m.shape[0]  # numero de ciudades
