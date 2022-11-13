@@ -81,6 +81,10 @@ def cd_2_dict(p_cd: np.ndarray) -> dict:
     Return:
         dict: diccionario con los conjuntos disjuntos.
     """
+    # si la lista está vacia devuelve diccionario vacío
+    if len(l) <= 0 :
+        print("El argumento lista está vacío, se devolverá un dict vacío")
+        return {}
     dict = {}
     # Recorremos el array
     for i in range(len(p_cd)):
