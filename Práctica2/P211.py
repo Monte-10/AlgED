@@ -19,7 +19,6 @@ def init_cd(n: int) -> np.ndarray:
     array = [-1] * n
     return array
 
-
 def union(rep_1: int, rep_2: int, p_cd: np.ndarray) -> int:
     """
     Función que une dos conjuntos disjuntos.
@@ -32,6 +31,10 @@ def union(rep_1: int, rep_2: int, p_cd: np.ndarray) -> int:
     Return:
         int: representante del conjunto unido.
     """
+    # si p_cd está vacío se produce una excepción
+    if len(p_cd) <= 0 :
+        raise Exception("union: El argumento p_cd está vacío, no se puede realizar union.")
+
     # Miramos si el tamaño del primer conjunto es mayor que el del segundo
     if p_cd[rep_2] < p_cd[rep_1]:
         p_cd[rep_1] = rep_2
@@ -58,6 +61,10 @@ def find(ind: int, p_cd: np.ndarray) -> int:
     Return:
         int: representante del conjunto al que pertenece el elemento ind.
     """
+    # si p_cd está vacío se produce una excepción
+    if len(p_cd) <= 0 :
+        raise Exception("find: El argumento p_cd está vacío, no se puede realizar find.")
+        
     aux = ind
     # Encontramos el representante del conjunto
     while p_cd[aux] >= 0:
@@ -70,7 +77,6 @@ def find(ind: int, p_cd: np.ndarray) -> int:
     
     return aux
 
-
 def cd_2_dict(p_cd: np.ndarray) -> dict:
     """
     Función que devuelve un diccionario con los conjuntos disjuntos.
@@ -81,6 +87,11 @@ def cd_2_dict(p_cd: np.ndarray) -> dict:
     Return:
         dict: diccionario con los conjuntos disjuntos.
     """
+    # si p_cd está vacío devuelve diccionario vacío
+    if len(p_cd) <= 0 :
+        print("cd_2_dict: El argumento p_cd está vacío, se devolverá un dict vacío")
+        return {}
+
     dict = {}
     # Recorremos el array
     for i in range(len(p_cd)):
@@ -109,8 +120,9 @@ def ccs(n: int, l: List)-> dict:
     """
     # si la lista está vacia devuelve diccionario vacío
     if len(l) <= 0 :
-        print("El argumento lista está vacío, se devolverá un dict vacío")
+        print("ccs: El argumento lista está vacío, se devolverá un dict vacío")
         return {}
+        
     table = init_cd(n)
     # Recorremos las ramas del grafo
     for u,v in l:
@@ -159,7 +171,7 @@ def dist_matrix(n_nodes: int, w_max=10) -> np.ndarray:
     np.fill_diagonal(matriz_symm, 0)
     return matriz_symm
 
-    
+
 def greedy_tsp(dist_m: np.ndarray, node_ini=0) -> List:
     """
     Recibe una matriz de distancias y un nodo inicial y devuelva un circuito codicioso como una lista con valores entre 0
