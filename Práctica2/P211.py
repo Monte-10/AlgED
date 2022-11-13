@@ -206,7 +206,7 @@ def greedy_tsp(dist_m: np.ndarray, node_ini=0) -> List:
                 circuito.append(ciudad)
                 break
 
-    return list(circuito)
+    return list(circuito) + [node_ini]
 
 
 def len_circuit(circuit: List, dist_m: np.ndarray) -> int:
@@ -278,6 +278,8 @@ def exhaustive_tsp(dist_m: np.ndarray) -> list:
     # se prueban todas las combinaciones posibles
     for circuito in itertools.permutations(range(ciudades)):
         # diccionario con el circuito y su longitud
+        circuito = list(circuito)
+        circuito.append(circuito[0])
         circuitos[tuple(circuito)] = len_circuit(circuito, dist_m)
 
     # se obtiene el circuito
