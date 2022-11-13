@@ -1,6 +1,5 @@
 import numpy as np
 import itertools
-from itertools import permutations
 
 from typing import List, Dict, Callable, Iterable
 
@@ -19,21 +18,23 @@ def init_cd(n: int) -> np.ndarray:
     array = [-1] * n
     return array
 
+
 def union(rep_1: int, rep_2: int, p_cd: np.ndarray) -> int:
     """
     Función que une dos conjuntos disjuntos.
-    
+
     Args:
         rep_1: representante del primer conjunto.
         rep_2: representante del segundo conjunto.
         p_cd: array con los representantes de los conjuntos.
-    
+
     Return:
         int: representante del conjunto unido.
     """
     # si p_cd está vacío se produce una excepción
-    if len(p_cd) <= 0 :
-        raise Exception("union: El argumento p_cd está vacío, no se puede realizar union.")
+    if len(p_cd) <= 0:
+        raise Exception(
+            "union: El argumento p_cd está vacío, no se puede realizar union.")
 
     # Miramos si el tamaño del primer conjunto es mayor que el del segundo
     if p_cd[rep_2] < p_cd[rep_1]:
@@ -53,18 +54,19 @@ def union(rep_1: int, rep_2: int, p_cd: np.ndarray) -> int:
 def find(ind: int, p_cd: np.ndarray) -> int:
     """
     Función que devuelve el representante del conjunto al que pertenece el elemento ind.
-    
+
     Args:
         ind: elemento del conjunto.
         p_cd: array con los representantes de los conjuntos.
-    
+
     Return:
         int: representante del conjunto al que pertenece el elemento ind.
     """
     # si p_cd está vacío se produce una excepción
-    if len(p_cd) <= 0 :
-        raise Exception("find: El argumento p_cd está vacío, no se puede realizar find.")
-        
+    if len(p_cd) <= 0:
+        raise Exception(
+            "find: El argumento p_cd está vacío, no se puede realizar find.")
+
     aux = ind
     # Encontramos el representante del conjunto
     while p_cd[aux] >= 0:
@@ -74,21 +76,22 @@ def find(ind: int, p_cd: np.ndarray) -> int:
         aux2 = p_cd[ind]
         p_cd[ind] = aux
         ind = aux2
-    
+
     return aux
+
 
 def cd_2_dict(p_cd: np.ndarray) -> dict:
     """
     Función que devuelve un diccionario con los conjuntos disjuntos.
-    
+
     Args:
         p_cd: array con los representantes de los conjuntos.
-    
+
     Return:
         dict: diccionario con los conjuntos disjuntos.
     """
     # si p_cd está vacío devuelve diccionario vacío
-    if len(p_cd) <= 0 :
+    if len(p_cd) <= 0:
         print("cd_2_dict: El argumento p_cd está vacío, se devolverá un dict vacío")
         return {}
 
@@ -103,32 +106,32 @@ def cd_2_dict(p_cd: np.ndarray) -> dict:
         # Si el elemento no es un representante, se añade a la lista de su representante
         if p_cd[i] >= 0:
             dict[find(i, p_cd)].append(i)
-                
+
     return dict
-    
-    
-def ccs(n: int, l: List)-> dict:
+
+
+def ccs(n: int, l: List) -> dict:
     """
     Función que devuelve las componentes conexas de un grafo.
-    
+
     Args:
         n: número de nodos del grafo.
         l: ramas del grafo.
-        
+
     Return:
         dict: diccionario con las componentes conexas del grafo.
     """
     # si la lista está vacia devuelve diccionario vacío
-    if len(l) <= 0 :
+    if len(l) <= 0:
         print("ccs: El argumento lista está vacío, se devolverá un dict vacío")
         return {}
-        
+
     table = init_cd(n)
     # Recorremos las ramas del grafo
-    for u,v in l:
+    for u, v in l:
         # Hace un find de cada conjunto
-        rep_u = find(u,table)
-        rep_v = find(v,table)
+        rep_u = find(u, table)
+        rep_v = find(v, table)
 
         # Si los representantes son distintos, hace una unión
         if rep_u != rep_v:
@@ -144,7 +147,7 @@ def ccs(n: int, l: List)-> dict:
 #######################################################################################
 #######################################################################################
 #######################################################################################
-#--------------------------------------Parte 2----------------------------------------#
+# --------------------------------------Parte 2----------------------------------------#
 #######################################################################################
 #######################################################################################
 #######################################################################################
@@ -153,20 +156,20 @@ def ccs(n: int, l: List)-> dict:
 def dist_matrix(n_nodes: int, w_max=10) -> np.ndarray:
     """
     Genera la matriz de distancias de un grafo con n_nodes nodos, y simétrica con diagonal 0
-    
+
     Args:
         n_nodes: Número de nodos que tendrá la matriz.
         w_max: Valor máximo que puede tener la matriz en una posición.
-    
+
     Return: 
         matriz_symm: Matriz resultante creada.
     """
     # Generamos una matriz aleatoria con valores aleatorios entre 1 y w_max
     matrix = np.random.randint(1, w_max, size=(n_nodes, n_nodes))
-    
+
     # Hacemos que la matriz sea simétrica
     matriz_symm = (matrix + matrix.T)//2
-    
+
     # Hacemos que la diagonal sea 0
     np.fill_diagonal(matriz_symm, 0)
     return matriz_symm
@@ -176,18 +179,18 @@ def greedy_tsp(dist_m: np.ndarray, node_ini=0) -> List:
     """
     Recibe una matriz de distancias y un nodo inicial y devuelva un circuito codicioso como una lista con valores entre 0
     y el número de nodos menos 1.
-    
+
     Args:
         dist_m: Matriz de distancias.
         node_ini: Nodo inicial desde el que se creará el circuito.
-    
+
     Return: 
         circuito: Lista resultante que corresponde al circuito obtenido.
     """
     # comprobacion de error
     if len(dist_m) <= 0:
-       raise Exception("El argumento dist_m esta vacío.")
-       
+        raise Exception("El argumento dist_m esta vacío.")
+
     ciudades = dist_m.shape[0]
     circuito = [node_ini]
     while len(circuito) < ciudades:
@@ -197,57 +200,54 @@ def greedy_tsp(dist_m: np.ndarray, node_ini=0) -> List:
         # se ordenan las distancias para obtener la menor
         distancias = np.argsort(dist_m[ciudad_act])
 
-        # para cada ciudad se comprueba 
+        # para cada ciudad se comprueba
         for ciudad in distancias:
             if ciudad not in circuito:
                 circuito.append(ciudad)
                 break
-            
+
     return list(circuito)
-        
-    
-    
+
+
 def len_circuit(circuit: List, dist_m: np.ndarray) -> int:
     """
     Recibe un circuito y una matriz de distancias y devuelve la longitud de dicho circuito.
-    
+
     Args:
         circuit: Circuito codicioso.
         dist_m: Matriz de distancias.
-    
+
     Return: 
         longitud: Longitud del circuito.
     """
     # si el circuito esta vacio devuelve error
-    if len(circuit) <= 0 :
+    if len(circuit) <= 0:
         raise Exception("El argumento circuit esta vacío")
 
     # si el circuito esta vacio devuelve error
-    if len(dist_m) <= 0 :
+    if len(dist_m) <= 0:
         raise Exception("El argumento dist_m esta vacío")
-        
 
     longitud = 0
     # se calcula la longitud sumando las distancias
     for i in range(len(circuit)-1):
         longitud += dist_m[circuit[i]][circuit[i+1]]
-        
+
     return longitud
-    
-    
+
 
 def repeated_greedy_tsp(dist_m: np.ndarray) -> list:
     """
     Aplica greedy_tsp con todos los nodos del grafo para devolver el circuito de menor longitud
-    
+
     Args:
         dist_m: Matriz de distancias.
-    
+
     Return: 
         circuito_min: Circuito con la menor longitud de todos.
     """
-    circuitos = {} # diccionario auxiliar 
-    ciudades = dist_m.shape[0] # numero de ciudades
+    circuitos = {}  # diccionario auxiliar
+    ciudades = dist_m.shape[0]  # numero de ciudades
 
     # por cada ciudad obtiene el circuito partiendo de ella y la longitud en el diccionario
     for i in range(ciudades):
@@ -255,32 +255,32 @@ def repeated_greedy_tsp(dist_m: np.ndarray) -> list:
         circuito = greedy_tsp(dist_m, i)
         # diccionario con el circuito y su longitud
         circuitos[tuple(circuito)] = len_circuit(circuito, dist_m)
-        
+
     # se obtiene el circuito con longitud minima
     circuito_min = min(circuitos, key=circuitos.get)
-    
+
     return list(circuito_min)
-    
-    
+
+
 def exhaustive_tsp(dist_m: np.ndarray) -> list:
     """
     Función que recibe una matriz de distancias y examina todas los circuitos posibles, luego devuelve el circuito con la longitud mínima
-    
+
     Args:
         dist_m: Matriz de distancias
-    
+
     Return:
         circuito_min: Lista con el circuito con la longitud mínima
     """
-    circuitos = {} # diccionario auxiliar 
-    ciudades = dist_m.shape[0] # numero de ciudades
+    circuitos = {}  # diccionario auxiliar
+    ciudades = dist_m.shape[0]  # numero de ciudades
 
     # se prueban todas las combinaciones posibles
     for circuito in itertools.permutations(range(ciudades)):
-         # diccionario con el circuito y su longitud
+        # diccionario con el circuito y su longitud
         circuitos[tuple(circuito)] = len_circuit(circuito, dist_m)
-        
-    # se obtiene el circuito 
+
+    # se obtiene el circuito
     circuito_min = min(circuitos, key=circuitos.get)
-    
+
     return list(circuito_min)
