@@ -81,10 +81,6 @@ def cd_2_dict(p_cd: np.ndarray) -> dict:
     Return:
         dict: diccionario con los conjuntos disjuntos.
     """
-    # si la lista está vacia devuelve diccionario vacío
-    if len(l) <= 0 :
-        print("El argumento lista está vacío, se devolverá un dict vacío")
-        return {}
     dict = {}
     # Recorremos el array
     for i in range(len(p_cd)):
@@ -111,6 +107,10 @@ def ccs(n: int, l: List)-> dict:
     Return:
         dict: diccionario con las componentes conexas del grafo.
     """
+    # si la lista está vacia devuelve diccionario vacío
+    if len(l) <= 0 :
+        print("El argumento lista está vacío, se devolverá un dict vacío")
+        return {}
     table = init_cd(n)
     # Recorremos las ramas del grafo
     for u,v in l:
