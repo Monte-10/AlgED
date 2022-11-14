@@ -23,33 +23,36 @@ def qsel(t: np.ndarray, k: int)-> Union[int, None]:
     # si la longitud de t es 1 devuelve el valor que queda
     if len(t) == 1:
         return t[0]
+        
     else:
         # si no, realiza un split para dividir el array en dos
-        t1, p, t2 = split(t)
-        print(split(t))
-        # si K es igual a 
-        if k < len(t1):
-            print("ENTRA k < len(t1)", k)
-            return qsel(t1, k)
-        elif k == len(t1):
-            print("ENTRA k ==len(t1)", k)
+        menores, p, mayores = split(t)
+
+        # si k es menor que la longitud se utilizan los menores
+        if k < len(menores):
+            return qsel(menores, k)
+
+        # si k es igual a la longitud significa que K se encuentra en el medio,
+        # ej 4563 7 89 con k = 4
+        elif k == len(menores):
             return p
+
+        # si k es mayor que la longitud se usa mayores y se recalcula el valor de k
         else:
-            print("ENTRA k > t1", k)
-            return qsel(t2, k-len(t1)-1)
+            return qsel(mayores, k-len(menores)-1)
 
 print(qsel(np.array([8,10,12,2,4,6,7,0,3]),1))
 """Escribir una funcion no recursiva 'qsel_nr(t: np.ndarray, k: int)-> 
 Union[int, None]' que elimine la recursion de cola de la función anterior."""
 def qsel_nr(t: np.ndarray, k: int)-> Union[int, None]:
     while len(t) > 1:
-        t1, p, t2 = split(t)
+        t1, p, mayores = split(t)
         if k < len(t1):
             t = t1
         elif k == len(t1):
             return p
         else:
-            t = t2
+            t = mayores
             k = k-len(t1)-1
     return t[0]
 
@@ -78,14 +81,14 @@ def pivot5(t: np.ndarray)-> int:
 def qsel5_nr(t: np.ndarray, k: int)-> Union[int, None]:
     while len(t) > 1:
         mid = pivot5(t)
-        t1, p, t2 = split_pivot(t, mid)
-        if k < len(t1):
-            t = t1
-        elif k == len(t1):
+        menores, p, mayores = split_pivot(t, mid)
+        if k < len(menores):
+            t = menores
+        elif k == len(menores):
             return p
         else:
-            t = t2
-            k = k-len(t1)-1
+            t = mayores
+            k = k-len(menores)-1
     return t[0]
 
 """Escribir una función qsort_5(t: np.ndarray)-> np.ndarray que utilice las funciones anteriores split_pivot, pivot_5 para devolver una ordenacion de la tabla t."""
