@@ -12,12 +12,9 @@ def split(t: np.ndarray)-> Tuple[np.ndarray, int, np.ndarray]:
 
     return menores, t[0], mayores
 
-#print(split(np.array([8,7,3,6,0,1,2,4,5,9])))
 """Escribir una funcion 'qsel(t: np.ndarray, k: int)-> Union[int, None]' que aplique de manera recursiva el algoritmo 
 QuickSelect usando la funcion split anterior y devuelva el valor del elemento que ocupar´ıa el ´ındice k en una ordenacion de ´ 
 t si ese elemento existe y None si no."""
-# 12345678
-# 4563 7 
 def qsel(t: np.ndarray, k: int)-> Union[int, None]:
     # si la longitud de t es 1 devuelve el valor que queda
     if len(t) == 1:
@@ -59,7 +56,7 @@ def qsel_nr(t: np.ndarray, k: int)-> Union[int, None]:
             return p
 
         else:
-            k = k-len(menores)-1
+            k = k-len(menores)
             aux_t = mayores
 
     return aux_t[0]
@@ -81,11 +78,39 @@ def pivot5(t: np.ndarray)-> int:
     if len < 5:
         return qsel5_nr(t,0)
 
+    # se obtienen las medianas
     t_aux = t[:5*len(t//5)]
     medianas = np.median(t_aux.reshape(-1,5), axis = 1)
-    return qsel5_nr(medianas,len(t_aux))
+
+    # se comprueba la longitud
+    if len(medianas) <= 5:
+        if len(medianas)%2 == 0 : # tamaño par
+            pivot = sorted(medianas)[len(medianas)//2-1]
+        else: # tamaño impar
+            pivot = sorted(medianas)[len(medianas)//2]
+    else: # si la longitud es menor se llama a quickselect con k actualizado
+        pivot =  qsel5_nr(medianas, len(medianas)//2)
+    return pivot
 
 print(pivot5(np.array([1,6,2,4,3,0,9,5,7,8])))
 
+    
 def qsel5_nr(t: np.ndarray, k: int)-> Union[int, None]:
-    print()
+    # Caso base (con cutoff)
+    if len(t) <= 5:
+        return sorted(t)[k-1]
+    
+    # Obtiene el pivote (mediana de las medianas)
+    pivote_5 = pivot5(t)
+    
+    # Obtiene las particiones utilizando el pivote 
+    menores, pivote, mayores = split_pivot(t, pivote_5)
+
+    if k == len(menores):
+        return pivote
+    elif k < len(menores) :
+        return qsel5_nr(menores, k)
+    else:
+        return qsel5_nr(mayores, k-len(menores))
+
+print(qsel5_nr([8,7,3,6,0,1,2,4,5,9], 4))
