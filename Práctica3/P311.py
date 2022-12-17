@@ -3,6 +3,9 @@ import itertools
 from typing import List, Tuple, Dict, Callable, Iterable, Union
 
 def split(t: np.ndarray)-> Tuple[np.ndarray, int, np.ndarray]:
+    # comprueba errores
+    if len(t) <= 0 or t is None:
+        return None
     # se obtienen los elementos mayores a t[0]
     mayores = t[t>t[0]]
 
@@ -12,6 +15,9 @@ def split(t: np.ndarray)-> Tuple[np.ndarray, int, np.ndarray]:
     return menores, t[0], mayores
 
 def qsel(t: np.ndarray, k: int)-> Union[int, None]:
+    # comprueba que se pase un valor aceptado de k y otros errores
+    if k < 0 or k >= len(t) or len(t) <= 0 or t is None:
+        return None
     # si la longitud de t es 1 devuelve el valor que queda
     if len(t) == 1:
         return t[0]
@@ -25,54 +31,69 @@ def qsel(t: np.ndarray, k: int)-> Union[int, None]:
             return qsel(menores, k)
 
         # si k es igual a la longitud significa que K se encuentra en el medio,
-        # ej 4563 7 89 con k = 4
         elif k == len(menores):
             return p
 
         # si k es mayor que la longitud se usa mayores y se recalcula el valor de k
         else:
-            return qsel(mayores, k-len(menores)-1)
+            return qsel(mayores, k - (len(menores) +1))
 
-# print(qsel(np.array([8,10,12,2,4,6,7,0,3]),1))
 def qsel_nr(t: np.ndarray, k: int)-> Union[int, None]:
-    # podria evitarse esto y trabajar directamente sobre t
-    aux_t = t
+    # comprueba que se pase un valor aceptado de k y otros errores
+    if k < 0 or k >= len(t) or len(t) <= 0 or t is None:
+        return None
+    
+    else:
+        # mientras la longitud sea mayor a 1 realiza split y comprobaciones iguales a qsel
+        while (len(t) >= 1):
+            # realiza el split
+            menores, p, mayores = split(t)
 
-    # mientras la longitud sea mayor a 1 realiza split y comprobaciones iguales a qsel
-    while(len(aux_t) > 1):
-        # realiza el split
-        menores, p, mayores = split(aux_t)
+            if k < len(menores):
+                t = menores
 
-        if k < len(menores):
-            aux_t = menores
+            elif k == len(menores):
+                return p
 
-        elif k == len(menores):
-            return p
+            else:
+                k = k - (len(menores) +1)
+                t = mayores
 
-        else:
-            k = k-len(menores)
-            aux_t = mayores
-
-    return aux_t[0]
+        return
 
 def split_pivot(t: np.ndarray, mid: int)-> Tuple[np.ndarray, int, np.ndarray]:
-    # se obtienen los elementos mayores a mid
-    mayores = t[t>mid]
+    # comprobacion de error
+    if t is None or len(t) < 1:
+        return None
 
-    # se obtienen los elementos menores a mid
-    menores = t[t<mid]
+    # empleamos un metodo diferente al usado anteriormente pues daba problemas de ejecucion
+    mayores = [y for y in t[0 : len(t)] if y > mid]
+    menores = [x for x in t[0 : len(t)] if x < mid]
+    
+    return (menores, mid, mayores)
 
-    return menores, mid, mayores
 
 def pivot5(t: np.ndarray)-> int:
+    # comprueba errores
+    if len(t) <= 0 or t is None:
+        return None
+
+    # si la longitud es menor a 5 no se calculan las medianas
     if len(t) < 5:
         return qsel5_nr(t,0)
 
     # se obtienen las medianas
-    t_aux = t[:5*len(t//5)]
-    medianas = np.median(t_aux.reshape(-1,5), axis = 1)
+    num_group = len(t)//5
+    # indice donde se encuenta la mediana en una lista de 5 elementos ordenada
+    indices = 5//2
 
-    # se comprueba la longitud
+    # se descartan grupos de menor tamaño a 5
+    sublistas = [t[i:i+ 5] for i in range(0, len(t), 5)][:num_group]
+
+    # se obtienen las medianas
+    medianas = [sorted(sub)[indices] for sub in sublistas]
+    
+    # si el numero de medianas es menor a 5 se ordena
     if len(medianas) <= 5:
         if len(medianas)%2 == 0 : # tamaño par
             pivot = sorted(medianas)[len(medianas)//2-1]
@@ -82,63 +103,96 @@ def pivot5(t: np.ndarray)-> int:
         pivot =  qsel5_nr(medianas, len(medianas)//2)
     return pivot
 
-# print(pivot5(np.array([1,6,2,4,3,0,9,5,7,8])))
+
 
 def qsel5_nr(t: np.ndarray, k: int)-> Union[int, None]:
-    # Caso base (con cutoff)
+    # comprueba que se pase un valor aceptado de k y otros errores
+    if k < 0 or k >= len(t) or len(t) <= 0 or t is None:
+        return None
+
+    # Caso base (con cutoff 5)
+    while len(t) > 5:
+        # Obtiene el pivote (mediana de las medianas)
+        pivote_5 = pivot5(t)
+        
+        # Obtiene las particiones utilizando el pivote 
+        menores, pivote, mayores = split_pivot(t, pivote_5)
+
+        if k == len(menores):
+            return pivote
+        elif k < len(menores) :
+            t = menores
+        else:
+            t = mayores
+            k = k - (len(menores) + 1)
+
+    return sorted(t)[k]
+
+
+def qsort_5(t: np.ndarray)-> np.ndarray:
+
+    if t is None or len(t) < 1:
+        return t
+
     if len(t) <= 5:
-        return sorted(t)[k-1]
-    
-    # Obtiene el pivote (mediana de las medianas)
+        return sorted(t)
+
     pivote_5 = pivot5(t)
-    
-    # Obtiene las particiones utilizando el pivote 
     menores, pivote, mayores = split_pivot(t, pivote_5)
 
-    if k == len(menores):
-        return pivote
-    elif k < len(menores) :
-        return qsel5_nr(menores, k)
-    else:
-        return qsel5_nr(mayores, k-len(menores))
+    t[: len(menores)+1] = qsort_5(menores) + [pivote]
+    t[len(menores) :] = [pivote] + qsort_5(mayores)
 
-# print(qsel5_nr(np.array([8,7,3,6,0,1,2,4,5,9]), 4))
+    return t
+
 
 def edit_distance(str_1: str, str_2: str)-> int:
+    # control de errores
+    if str_1 is None or str_2 is None:
+        return -1
+
     # se obtienen las longitudes de las cadenas
     len_1 = len(str_1)
     len_2 = len(str_2)
 
-    # se crea la matriz de distancias
-    matriz = np.zeros((len_1+1, len_2+1), dtype = int)
+    if len_1 == 0 and len_2 == 0: return 0
 
-    # se rellena la matriz en primera fila y columna del 1 al len(str)
-    matriz[0,:] = np.arange(len_2+1)
-    matriz[:,0] = np.arange(len_1+1)
-    
-    # se recorre la matriz de distancias
-    for i in range(1, len_1+1):
-        for j in range(1, len_2+1):
+    elif (len_1 == 0 and len_2 > 0) or (len_2 == 0 and len_1 > 0):
+        return len_1 + len_2
 
-            # si los caracteres son iguales se copia el valor de la diagonal
-            if str_1[i-1] == str_2[j-1]:
-                # copia
-                matriz[i,j] = matriz[i-1,j-1]
-            # caracteres distintos
-            else:
-                # se obtiene el minimo de las anteriores posiciones
-                matriz[i,j] = min(matriz[i-1,j], matriz[i,j-1]) +1
+    else:
+        # se crea la matriz de distancias
+        matriz = np.zeros((len_1+1, len_2+1))
 
-    # valor de la ultima posicion
-    return matriz[-1,-1]
+        # se rellena la matriz en primera fila y columna del 1 al len(str)
+        matriz[0,:] = np.arange(len_2+1)
+        matriz[:,0] = np.arange(len_1+1)
+        
+        # se recorre la matriz de distancias
+        for i in range(1, len_1+1):
+            for j in range(1, len_2+1):
 
-def max_subsequence_length(str_1: str, str_2: str)-> int:
+                # se obtiene el minimo de las anteriores posiciones con diagonal +1
+                if str_1[i-1] == str_2[j-1]:
+                    matriz[i,j] = min(matriz[i-1,j] + 1 , matriz[i,j-1] + 1, matriz[i-1,j-1])
+                # se obtiene el minimo de las anteriores posiciones con diagonal +1
+                else:
+                    matriz[i,j] = min(matriz[i-1,j] + 1 , matriz[i,j-1] + 1, matriz[i-1,j-1] + 1) 
+
+        # valor de la ultima posicion
+        return int(matriz[-1,-1])
+
+
+def max_distance_matrix(str_1: str, str_2: str) -> np.ndarray :
+    # comprobacion de errores
+    if str_1 is None or str_2 is None:
+        return -1
+
     # se obtienen las longitudes de las cadenas
     len_1 = len(str_1)
     len_2 = len(str_2)
-
     # se crea una matriz de len_1+1 x len_2+1
-    matriz = np.zeros((len_1+1, len_2+1), dtype = int)
+    matriz = np.zeros((len_1+1, len_2+1))
 
     # se recorre la matriz
     for i in range(1, len_1+1):
@@ -149,47 +203,60 @@ def max_subsequence_length(str_1: str, str_2: str)-> int:
             # si no, se coge el maximo de la fila y columna anterior
             else:
                 matriz[i,j] = max(matriz[i-1,j], matriz[i,j-1])
+    
+    # devolvemos la matriz obtenida)
+    return matriz
+
+
+def max_subsequence_length(str_1: str, str_2: str) -> int:
+    # comprobacion de errores
+    if str_1 is None or str_2 is None:
+        return -1
+
+    # se llama a la función que crea la matriz de distancias 
+    matriz = max_distance_matrix(str_1, str_2)
                 
     # se devuelve el valor de la ultima posicion
     return matriz[-1,-1]
 
-print(max_subsequence_length("cataratas", "tarta"))
 
-# Escribir una función max_common_subsequence(str_1: str, str_2: str)-> str que devuelva una subcadena comun a las cadenas str_1, str_2 aunque no necesariamente consecutiva.
 def max_common_subsequence(str_1: str, str_2: str)-> str:
-    # se obtienen las longitudes de las cadenas
-    len_1 = len(str_1)
-    len_2 = len(str_2)
+    # comprobacion de errores
+    if str_1 is None or str_2 is None:
+        return -1
 
-    # se crea una matriz de len_1+1 x len_2+1
-    matriz = np.zeros((len_1+1, len_2+1), dtype = int)
-
-    # se recorre la matriz
-    for i in range(1, len_1+1):
-        for j in range(1, len_2+1):
-            # si los caracteres son iguales se copia el valor de la diagonal +1
-            if str_1[i-1] == str_2[j-1]:
-                matriz[i,j] = matriz[i-1,j-1] +1
-            # si no, se coge el maximo de la fila y columna anterior
-            else:
-                matriz[i,j] = max(matriz[i-1,j], matriz[i,j-1])
-                
+    # se llama a la función que crea la matriz de distancias 
+    matriz = max_distance_matrix(str_1, str_2)
+            
     # se obtiene la subcadena
     subcadena = ""
-    i = len_1
-    j = len_2
+    i = len(str_1)
+    j = len(str_2)
+    """for i, j in zip(reversed(range(0,len_1+1)),reversed(range(0, len_2+1))):
+        if str_1[i-1] == str_2[j-1]:
+            # aumenta el elemento a la subcadena y avanza en diagonal
+            subcadena = str_1[i-1] + subcadena
+        elif matriz[i-1,j] > matriz[i,j-1]:
+            # solo queremos que avance en i
+            j +=1
+        else:
+            # solo queremos que avance en j
+            i += 1"""
+
     while i > 0 and j > 0:
+        # si el caracter coincide se añade a la subcadena, retrocede en diagonal pues no hizo nada
         if str_1[i-1] == str_2[j-1]:
             subcadena = str_1[i-1] + subcadena
             i -= 1
             j -= 1
+        # si el valor arriba es mayor al valor a la izquierda se desplaza arriba
         elif matriz[i-1,j] > matriz[i,j-1]:
             i -= 1
+        # en caso contrario se desplaza a la izquierda
         else:
             j -= 1
     return subcadena
 
-print(max_common_subsequence("cataratas", "tarta"))
 
 # Escribir una función min_mult_matrix(l_dims: List[int])-> int que devuelva el m´ınimo numero de productos para multiplicar ´ n matrices cuyas dimensiones estan contenidas en la lista l_dims con n+1 ints, el primero de los cuales nos da las filas de la primera matriz y el resto las columnas de todas ellas.
 def min_mult_matrix(l_dims: List[int])-> int:
@@ -205,5 +272,3 @@ def min_mult_matrix(l_dims: List[int])-> int:
             # se obtiene el minimo de la multiplicacion de las matrices
             matriz[j,j+i] = min(matriz[j,k] + matriz[k+1,j+i] + l_dims[j]*l_dims[k+1]*l_dims[j+i+1] for k in range(j,j+i))
     return matriz[0,-1]
-
-print(min_mult_matrix([10,20,50,1,100]))
