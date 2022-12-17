@@ -3,6 +3,15 @@ import itertools
 from typing import List, Tuple, Dict, Callable, Iterable, Union
 
 def split(t: np.ndarray)-> Tuple[np.ndarray, int, np.ndarray]:
+    """
+    Función que divide un array en dos partes, una con los elementos menores que el pivote y otra con los mayores.
+
+    Args:
+        t: array a dividir.
+
+    Return:
+        Tuple[np.ndarray, int, np.ndarray]: tupla con los elementos menores, el pivote y los mayores.
+    """
     # comprueba errores
     if len(t) <= 0 or t is None:
         return None
@@ -15,6 +24,16 @@ def split(t: np.ndarray)-> Tuple[np.ndarray, int, np.ndarray]:
     return menores, t[0], mayores
 
 def qsel(t: np.ndarray, k: int)-> Union[int, None]:
+    """
+    Función que devuelve el elemento k de un array ordenado de manera recursiva.
+
+    Args:
+        t: array ordenado.
+        k: elemento a devolver.
+
+    Return:
+        Union[int, None]: elemento k del array ordenado.
+    """
     # comprueba que se pase un valor aceptado de k y otros errores
     if k < 0 or k >= len(t) or len(t) <= 0 or t is None:
         return None
@@ -39,6 +58,16 @@ def qsel(t: np.ndarray, k: int)-> Union[int, None]:
             return qsel(mayores, k - (len(menores) +1))
 
 def qsel_nr(t: np.ndarray, k: int)-> Union[int, None]:
+    """
+    Lo mismo que qsel pero de manera no recursiva.
+
+    Args:
+        t: array ordenado.
+        k: elemento a devolver.
+
+    Return:
+        Union[int, None]: elemento k del array ordenado.
+    """
     # comprueba que se pase un valor aceptado de k y otros errores
     if k < 0 or k >= len(t) or len(t) <= 0 or t is None:
         return None
@@ -62,6 +91,16 @@ def qsel_nr(t: np.ndarray, k: int)-> Union[int, None]:
         return
 
 def split_pivot(t: np.ndarray, mid: int)-> Tuple[np.ndarray, int, np.ndarray]:
+    """
+    Función que divide un array en dos partes, una con los elementos menores que el pivote y otra con los mayores.
+
+    Args:
+        t: array a dividir.
+        mid: pivote.
+
+    Return:
+        Tuple[np.ndarray, int, np.ndarray]: tupla con los elementos menores, el pivote y los mayores.
+    """
     # comprobacion de error
     if t is None or len(t) < 1:
         return None
@@ -74,6 +113,15 @@ def split_pivot(t: np.ndarray, mid: int)-> Tuple[np.ndarray, int, np.ndarray]:
 
 
 def pivot5(t: np.ndarray)-> int:
+    """
+    Función que devuelve el pivote de un array de 5 elementos.
+
+    Args:
+        t: array de 5 elementos.
+
+    Return:
+        int: pivote.
+    """
     # comprueba errores
     if len(t) <= 0 or t is None:
         return None
@@ -106,6 +154,16 @@ def pivot5(t: np.ndarray)-> int:
 
 
 def qsel5_nr(t: np.ndarray, k: int)-> Union[int, None]:
+    """
+    Función que devuelve el elemento k de un array de 5 elementos de manera no recursiva.
+
+    Args:
+        t: array de 5 elementos.
+        k: elemento a devolver.
+
+    Return:
+        Union[int, None]: elemento k del array ordenado.
+    """
     # comprueba que se pase un valor aceptado de k y otros errores
     if k < 0 or k >= len(t) or len(t) <= 0 or t is None:
         return None
@@ -130,6 +188,15 @@ def qsel5_nr(t: np.ndarray, k: int)-> Union[int, None]:
 
 
 def qsort_5(t: np.ndarray)-> np.ndarray:
+    """
+    Función que ordena un array de 5 elementos.
+
+    Args:
+        t: array de 5 elementos.
+        
+    Return:
+        np.ndarray: array ordenado.
+    """
 
     if t is None or len(t) < 1:
         return t
@@ -147,6 +214,17 @@ def qsort_5(t: np.ndarray)-> np.ndarray:
 
 
 def edit_distance(str_1: str, str_2: str)-> int:
+    """
+    Función que calcula la distancia de edición entre dos cadenas de caracteres.
+    
+    Args:
+        str_1: primera cadena de caracteres.
+        str_2: segunda cadena de caracteres.
+    
+    Return:
+        int: distancia de edición entre las dos cadenas.
+    """
+    
     # control de errores
     if str_1 is None or str_2 is None:
         return -1
@@ -184,6 +262,16 @@ def edit_distance(str_1: str, str_2: str)-> int:
 
 
 def max_distance_matrix(str_1: str, str_2: str) -> np.ndarray :
+    """
+    Función que calcula la matriz de distancias máximas entre dos cadenas de caracteres.
+
+    Args:
+        str_1: primera cadena de caracteres.
+        str_2: segunda cadena de caracteres.
+
+    Return:
+        np.ndarray: matriz de distancias máximas entre las dos cadenas.
+    """
     # comprobacion de errores
     if str_1 is None or str_2 is None:
         return -1
@@ -209,6 +297,16 @@ def max_distance_matrix(str_1: str, str_2: str) -> np.ndarray :
 
 
 def max_subsequence_length(str_1: str, str_2: str) -> int:
+    """
+    Función que calcula la longitud de la subsecuencia común más larga entre dos cadenas de caracteres.
+
+    Args:
+        str_1: primera cadena de caracteres.
+        str_2: segunda cadena de caracteres.
+
+    Return:
+        int: longitud de la subsecuencia común más larga entre las dos cadenas.
+    """
     # comprobacion de errores
     if str_1 is None or str_2 is None:
         return -1
@@ -221,6 +319,16 @@ def max_subsequence_length(str_1: str, str_2: str) -> int:
 
 
 def max_common_subsequence(str_1: str, str_2: str)-> str:
+    """
+    Función que calcula la subsecuencia común más larga entre dos cadenas de caracteres.
+
+    Args:
+        str_1: primera cadena de caracteres.
+        str_2: segunda cadena de caracteres.
+
+    Return:
+        str: subsecuencia común más larga entre las dos cadenas.
+    """
     # comprobacion de errores
     if str_1 is None or str_2 is None:
         return -1
@@ -260,6 +368,15 @@ def max_common_subsequence(str_1: str, str_2: str)-> str:
 
 # Escribir una función min_mult_matrix(l_dims: List[int])-> int que devuelva el m´ınimo numero de productos para multiplicar ´ n matrices cuyas dimensiones estan contenidas en la lista l_dims con n+1 ints, el primero de los cuales nos da las filas de la primera matriz y el resto las columnas de todas ellas.
 def min_mult_matrix(l_dims: List[int])-> int:
+    """
+    Función que calcula el mínimo número de productos para multiplicar n matrices cuyas dimensiones están contenidas en la lista l_dims con n+1 ints, el primero de los cuales nos da las filas de la primera matriz y el resto las columnas de todas ellas.
+
+    Args:
+        l_dims: lista con las dimensiones de las matrices.
+
+    Return:
+        int: mínimo número de productos para multiplicar n matrices.
+    """
     # se obtiene el numero de matrices
     n = len(l_dims) -1
 
